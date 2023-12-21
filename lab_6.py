@@ -9,42 +9,39 @@ def on_click(event):
         plt.disconnect(cid)
 
 
-def Fill(x0: int, y0: int, filler: tuple, edge_color: tuple):
-    global image
-    stack = []
-    stack.append((x0, y0))
-    while (len(stack) != 0):
-        pixels = list(image.getdata())
-        current_point = stack.pop(0)
-        Xn, Yn = current_point[0], current_point[1]
-        if ((Xn < 0 or Xn > image.width) or (Yn < 0 or Yn > image.height)):
-            continue
-        elif (pixels[image.width * Yn + Xn] == filler):
-            continue
-        elif (pixels[image.width * Yn + Xn] == edge_color):
-            continue
-        image.putpixel((Xn, Yn), filler)
-        stack.append((Xn + 1, Yn))
-        stack.append((Xn, Yn + 1))
-        stack.append((Xn - 1, Yn))
-        stack.append((Xn, Yn - 1))
-
-
-image = Image.open("start.png")
+image = Image.open("a.png")
 cid = plt.connect("button_press_event", on_click)
 plt.imshow(image)
 plt.show()
 dot = [0] * 2
-filler_color = tuple(
-    int(val) for val in input("Введите желаемый закрашиваемый цвет в формате RGB через пробелы: ").split())
-if (len(filler_color) != 3):
-    raise Exception("Неверное число параметров")
-
-edge_color = tuple(int(val) for val in input("Введите цвет границы в формате RGB через пробелы: ").split())
-if ((len(edge_color)) != 3):
-    raise Exception("Неверное число параметров")
-Fill(dot[0], dot[1], filler_color, edge_color)
+s = input("введите цвет в формате RGB черех пробелы:").split()
+filler = tuple(int(val) for val in s)
+if len(filler) != 3:
+    print("Неверное число параметров")
+s_ = input("введите цвет границы в формате RGB через пробелы: ").split()
+edge = tuple(int(val) for val in s_)
+if len(edge) != 3:
+    print("Неверное число параметров")
+global image
+stack = []
+stack.append((dot[0], dot[1]))
+while len(stack) != 0:
+    pixels = list(image.getdata())
+    current = stack.pop(0)
+    Xn = current[0]
+    Yn = current[1]
+    if (Xn < 0 or Xn > image.width) or (Yn < 0 or Yn > image.height):
+        continue
+    elif pixels[image.width * Yn + Xn] == filler:
+        continue
+    elif pixels[image.width * Yn + Xn] == edge:
+        continue
+    image.putpixel((Xn, Yn), filler)
+    stack.append((Xn + 1, Yn))
+    stack.append((Xn, Yn + 1))
+    stack.append((Xn - 1, Yn))
+    stack.append((Xn, Yn - 1))
 plt.imshow(image)
 plt.show()
-image.save("end.png")
+image.save("b.png")
 image.close()
